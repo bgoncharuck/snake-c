@@ -8,7 +8,7 @@ typedef unsigned char UCHAR;
 
 #define SNAKE_COLOR BG_GREEN
 #define MAP_COLOR BG_RED
-#define BORDER_COLOR BG_BLACK
+#define BORDER_COLOR BG_WHITE
 
 #define WALL_CELL '1'
 #define EMPTY_CELL '0'

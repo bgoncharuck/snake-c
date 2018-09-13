@@ -7,8 +7,8 @@
 Food * food_new() {
     Food * self = malloc(sizeof(Food));
     srand(time(0));
-    size_t row = rand() % FIELD_SIZE + 1;
-    size_t column = rand() % FIELD_SIZE + 1;
+    UCHAR row = rand() % FIELD_SIZE + 1;
+    UCHAR column = rand() % FIELD_SIZE + 1;
     char color = rand() % 8 + 100;
     self->location = point2d_new(row, column);
     self->color = color;

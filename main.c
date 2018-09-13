@@ -1,5 +1,6 @@
 #include <defines.h>
 #include <food.h>
+#include <game_over.h>
 #include <map.h>
 #include <progbase.h>
 #include <progbase/console.h>
@@ -25,6 +26,8 @@ int main(void) {
         snake_move(snake);
         sleepMillis(60);
     }
+
+    game_over_print();
 
     map_clear(map);
     snake_clear(snake);
