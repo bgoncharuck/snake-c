@@ -1,36 +1,41 @@
-#include <console_print.h>
+#include <defines.h>
 #include <map.h>
 #include <math.h>
+#include <point2d.h>
 #include <progbase/console.h>
 #include <stdlib.h>
 
-#define DEFAULT_LENGTH 900
-#define MAP_COLOR BG_RED
-#define EMPTY_COLOR BG_BLACK
-
-#define WALL_CELL '1'
-#define EMPTY_CELL '0'
-
 struct __Map {
-    char * field;
-    int length;
+    Point2D ** walls;
+    size_t capacity;
+    size_t length;
 };
 
 Map * map_new() {
     Map * self = malloc(sizeof(Map));
-    self->length = DEFAULT_LENGTH;
-    self->field = malloc(sizeof(char) * self->length);
-    for (size_t i = 0; i < self->length; i++) {
-        self->field[i] = 0;
-    }
+    self->capacity = FIELD_SIZE * FIELD_SIZE;
+    self->walls = malloc(sizeof(Point2D *) * self->capacity);
+    self->length = 0;
     return self;
 }
 
 void map_clear(Map * self) {
-    if (self->field) {
-        if (self->field) free(self->field);
+    if (self) {
+        if (self->walls) {
+            for (size_t i = 0; i < self->length; i++) {
+                if (self->walls[i]) point2d_clear(self->walls[i]);
+            }
+            free(self->walls);
+        }
         free(self);
     }
+}
+
+static void map_add(Map * self, Point2D * point) {
+    if (!self || self->length == self->capacity) return;
+
+    self->walls[self->length] = point;
+    self->length++;
 }
 
 Map * map_newFromFile(char * fileName) {
@@ -38,31 +43,38 @@ Map * map_newFromFile(char * fileName) {
     if (!file) return NULL;
 
     Map * self = map_new();
-    int curr_char = 0;
-    size_t counter = 0;
-    while (1) {
-        curr_char = getc(file);
-        if (curr_char == '\n') {
-            continue;
-        } else if (curr_char == EOF) {
-            break;
+    size_t row = 0, column = 0;
+    for (size_t i = 0; i < FIELD_SIZE; i++) {
+        for (size_t j = 0; j < FIELD_SIZE; j++) {
+            char curr_char = fgetc(file);
+            if (curr_char == WALL_CELL) {
+                map_add(self, point2d_new(i + 1, j + 1));
+            }
         }
-        self->field[counter] = curr_char;
-        counter++;
+        fgetc(file);
     }
     fclose(file);
     return self;
 }
 
+static void print_background() {
+    Console_clear();
+    for (size_t i = 1; i <= FIELD_SIZE; i++) {
+        for (size_t j = 1; j <= FIELD_SIZE; j++) {
+            Point2D * point = point2d_new(i, j);
+            point2d_print(point, EMPTY_COLOR);
+            point2d_clear(point);
+        }
+    }
+}
+
 void map_print(Map * self) {
     if (!self) return;
 
-    Console_clear();
+    print_background();
     size_t length = sqrt(self->length);
     for (size_t i = 0; i < self->length; i++) {
-        console_print_cell(i / length + 1, i % length + 1,
-                           self->field[i] == WALL_CELL ? MAP_COLOR
-                                                       : EMPTY_COLOR);
+        point2d_print(self->walls[i], MAP_COLOR);
     }
     Console_setCursorAttribute(BG_DEFAULT);
 }
