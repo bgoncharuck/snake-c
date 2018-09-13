@@ -1,7 +1,6 @@
 #include <defines.h>
 #include <map.h>
 #include <math.h>
-#include <point2d.h>
 #include <progbase/console.h>
 #include <stdlib.h>
 
@@ -43,9 +42,9 @@ Map * map_newFromFile(char * fileName) {
     if (!file) return NULL;
 
     Map * self = map_new();
-    size_t row = 0, column = 0;
-    for (size_t i = 0; i < FIELD_SIZE; i++) {
-        for (size_t j = 0; j < FIELD_SIZE; j++) {
+    UCHAR row = 0, column = 0;
+    for (UCHAR i = 0; i < FIELD_SIZE; i++) {
+        for (UCHAR j = 0; j < FIELD_SIZE; j++) {
             char curr_char = fgetc(file);
             if (curr_char == WALL_CELL) {
                 map_add(self, point2d_new(i + 1, j + 1));
@@ -57,24 +56,31 @@ Map * map_newFromFile(char * fileName) {
     return self;
 }
 
-static void print_background() {
+static void print_border() {
     Console_clear();
-    for (size_t i = 1; i <= FIELD_SIZE; i++) {
-        for (size_t j = 1; j <= FIELD_SIZE; j++) {
-            Point2D * point = point2d_new(i, j);
-            point2d_print(point, EMPTY_COLOR);
-            point2d_clear(point);
-        }
+    for (UCHAR i = 1; i <= FIELD_SIZE + 2; i++) {
+        point2d_print_coordinates(1, i, BORDER_COLOR);
+        point2d_print_coordinates(FIELD_SIZE + 2, i, BORDER_COLOR);
+        point2d_print_coordinates(i, 1, BORDER_COLOR);
+        point2d_print_coordinates(i, FIELD_SIZE + 2, BORDER_COLOR);
     }
 }
 
 void map_print(Map * self) {
     if (!self) return;
 
-    print_background();
-    size_t length = sqrt(self->length);
+    print_border();
     for (size_t i = 0; i < self->length; i++) {
-        point2d_print(self->walls[i], MAP_COLOR);
+        point2d_print_field(self->walls[i], MAP_COLOR);
     }
     Console_setCursorAttribute(BG_DEFAULT);
+}
+
+bool map_contains(Map * self, Point2D * point) {
+    if (!self || !point) return false;
+
+    for (size_t i = 0; i < self->length; i++) {
+        if (point2d_equals(self->walls[i], point)) return true;
+    }
+    return false;
 }

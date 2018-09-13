@@ -9,6 +9,7 @@ struct __Snake {
     size_t capacity;
     size_t length;
     DIRECTION direction;
+    size_t score;
 };
 
 Snake * snake_new() {
@@ -17,6 +18,8 @@ Snake * snake_new() {
     self->cells = malloc(sizeof(Point2D *) * self->capacity);
     self->length = 1;
     self->cells[0] = point2d_new(5, 5);
+    self->direction = NONE;
+    self->score = 0;
     return self;
 }
 
@@ -71,17 +74,30 @@ void snake_add_cell(Snake * self) {
     self->length++;
 }
 
+static void snake_print_score(Snake * self) {
+    if (!self) return;
+
+    Console_reset();
+    Console_setCursorPosition(FIELD_SIZE + 3, 26);
+    printf("Your score: %zu", self->score);
+    fflush(stdout);
+}
+
 void snake_print(Snake * self) {
     if (!self) return;
     for (size_t i = 0; i < self->length; i++) {
-        point2d_print(self->cells[i], SNAKE_COLOR);
+        point2d_print_field(self->cells[i], SNAKE_COLOR);
     }
+    snake_print_score(self);
 }
 
 void snake_move(Snake * self) {
+    if (!self) return;
+
     for (size_t i = self->length - 1; i > 0; i--) {
         point2d_copy(self->cells[i], self->cells[i - 1]);
     }
+
     switch (self->direction) {
     case UP: {
         self->cells[0]->row--;
@@ -90,7 +106,7 @@ void snake_move(Snake * self) {
     }
     case DOWN: {
         self->cells[0]->row++;
-        if (self->cells[0]->row > FIELD_SIZE) self->cells[0]->row -= FIELD_SIZE;
+        if (self->cells[0]->row > FIELD_SIZE) self->cells[0]->row = 1;
         break;
     }
     case LEFT: {
@@ -100,10 +116,12 @@ void snake_move(Snake * self) {
     }
     case RIGTH: {
         self->cells[0]->column++;
-        if (self->cells[0]->column > FIELD_SIZE)
-            self->cells[0]->column -= FIELD_SIZE;
+        if (self->cells[0]->column > FIELD_SIZE) self->cells[0]->column = 1;
+        break;
     }
-    case NONE: break;
+    case NONE: {
+        break;
+    }
     }
 }
 
@@ -134,4 +152,64 @@ void snake_change_direction(Snake * self, DIRECTION direction) {
     }
     case NONE: break;
     }
+}
+
+bool snake_process_input(Snake * self) {
+    if (Console_isKeyDown()) {
+        char curr_key = getchar();
+        switch (curr_key) {
+        case 'w': {
+            snake_change_direction(self, UP);
+            break;
+        }
+        case 's': {
+            snake_change_direction(self, DOWN);
+            break;
+        }
+        case 'a': {
+            snake_change_direction(self, LEFT);
+            break;
+        }
+        case 'd': {
+            snake_change_direction(self, RIGTH);
+            break;
+        }
+        case 'e': {
+            snake_add_cell(self);
+            break;
+        }
+        default: break;
+        }
+        return curr_key != 'q';
+    }
+    return true;
+}
+
+bool snake_contains(Snake * self, Point2D * point) {
+    if (!self || !point) return false;
+
+    for (size_t i = 0; i < self->length; i++) {
+        if (point2d_equals(self->cells[i], point)) return true;
+    }
+    return false;
+}
+
+bool snake_process_food(Snake * self, Point2D * point, char score) {
+    if (!self || !point) return false;
+
+    if (point2d_equals(self->cells[0], point)) {
+        snake_add_cell(self);
+        self->score += score;
+        return true;
+    }
+    return false;
+}
+
+bool snake_continue_game(Snake * self, Map * map) {
+    if (!self || !map) return false;
+
+    for (size_t i = 1; i < self->length; i++) {
+        if (point2d_equals(self->cells[0], self->cells[i])) return false;
+    }
+    return !map_contains(map, self->cells[0]);
 }

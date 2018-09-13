@@ -1,4 +1,5 @@
 #include <defines.h>
+#include <food.h>
 #include <map.h>
 #include <progbase.h>
 #include <progbase/console.h>
@@ -7,48 +8,30 @@
 int main(void) {
     Map * map = map_newFromFile("default.map");
     Snake * snake = snake_new();
-
-    map_print(map);
-    snake_print(snake);
+    Food * food = food_generate_new(snake, map);
     Console_hideCursor();
     Console_lockInput();
 
-    while (1) {
-        if (Console_isKeyDown()) {
-            char curr_key = getchar();
-            switch (curr_key) {
-            case 'w': {
-                snake_change_direction(snake, UP);
-                break;
-            }
-            case 's': {
-                snake_change_direction(snake, DOWN);
-                break;
-            }
-            case 'a': {
-                snake_change_direction(snake, LEFT);
-                break;
-            }
-            case 'd': {
-                snake_change_direction(snake, RIGTH);
-                break;
-            }
-            case 'e': {
-                snake_add_cell(snake);
-                break;
-            }
-            default: break;
-            }
-            if (curr_key == 'q') break;
-        }
-        snake_move(snake);
+    while (snake_process_input(snake) && snake_continue_game(snake, map)) {
         map_print(map);
+        food_print(food);
         snake_print(snake);
-        sleepMillis(100);
+
+        if (snake_process_food(snake, food->location, food->color)) {
+            food_clear(food);
+            food = food_generate_new(snake, map);
+        }
+
+        snake_move(snake);
+        sleepMillis(60);
     }
+
     map_clear(map);
     snake_clear(snake);
+    food_clear(food);
+
     Console_showCursor();
     Console_unlockInput();
+    Console_setCursorPosition(FIELD_SIZE + 4, 1);
     return 0;
 }
