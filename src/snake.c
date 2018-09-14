@@ -1,4 +1,5 @@
 #include <defines.h>
+#include <food.h>
 #include <point2d.h>
 #include <progbase/console.h>
 #include <snake.h>
@@ -86,7 +87,8 @@ static void snake_print_score(Snake * self) {
 void snake_print(Snake * self) {
     if (!self) return;
     for (size_t i = 0; i < self->length; i++) {
-        point2d_print_field(self->cells[i], SNAKE_COLOR);
+        point2d_print_field(self->cells[i],
+                            i % 2 ? SNAKE_COLOR : SNAKE_COLOR_INTENSITY);
     }
     snake_print_score(self);
 }
@@ -194,12 +196,12 @@ bool snake_contains(Snake * self, Point2D * point) {
     return false;
 }
 
-bool snake_process_food(Snake * self, Point2D * point, char score) {
-    if (!self || !point) return false;
+bool snake_process_food(Snake * self, Food * food) {
+    if (!self || !food) return false;
 
-    if (point2d_equals(self->cells[0], point)) {
+    if (point2d_equals(self->cells[0], food_get_location(food))) {
         snake_add_cell(self);
-        self->score += score;
+        self->score += food_get_score(food);
         return true;
     }
     return false;
@@ -212,4 +214,9 @@ bool snake_continue_game(Snake * self, Map * map) {
         if (point2d_equals(self->cells[0], self->cells[i])) return false;
     }
     return !map_contains(map, self->cells[0]);
+}
+
+bool snake_is_moving(Snake * self) {
+    if (!self) return false;
+    return self->direction != NONE;
 }
