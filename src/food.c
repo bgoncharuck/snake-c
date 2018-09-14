@@ -1,6 +1,5 @@
 #include <defines.h>
 #include <food.h>
-#include <progbase/console.h>
 #include <stdlib.h>
 #include <sys/random.h>
 #include <time.h>
@@ -53,13 +52,14 @@ void food_print(Food * self) {
 
     UCHAR bonus_long = self->bonus_percent * FIELD_SIZE + 2;
     for (UCHAR i = 2; i <= FIELD_SIZE - bonus_long; i++) {
-        point2d_print_coordinates(FIELD_SIZE + 4, i, BONUS_COLOR);
+        char color = i % 2 ? BORDER_COLOR : BORDER_COLOR_INTENSITY;
+        point2d_print_coordinates(FIELD_SIZE + 4, i, color);
     }
 }
 
 UCHAR food_get_score(Food * self) {
     if (!self) return 0;
-    return self->bonus ? (4 + self->bonus_percent) * self->color
+    return self->bonus ? (1 + self->bonus_percent) * self->color
                        : self->color / 3;
 }
 

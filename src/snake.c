@@ -1,7 +1,7 @@
 #include <defines.h>
 #include <food.h>
+#include <pixel_number.h>
 #include <point2d.h>
-#include <progbase/console.h>
 #include <snake.h>
 #include <stdlib.h>
 
@@ -68,20 +68,9 @@ void snake_add_cell(Snake * self) {
         size_t pre_last_column = self->cells[self->length - 2]->column;
         new_row = 2 * new_row - pre_last_row;
         new_column = 2 * new_column - pre_last_column;
-        // if (new_row == 0) new_row = FIELD_SIZE;
-        // if (new_column == 0) new_column = FIELD_SIZE;
     }
     self->cells[self->length] = point2d_new(new_row, new_column);
     self->length++;
-}
-
-static void snake_print_score(Snake * self) {
-    if (!self) return;
-
-    Console_reset();
-    Console_setCursorPosition(FIELD_SIZE + 3, 26);
-    printf("Your score: %zu", self->score);
-    fflush(stdout);
 }
 
 void snake_print(Snake * self) {
@@ -90,7 +79,10 @@ void snake_print(Snake * self) {
         point2d_print_field(self->cells[i],
                             i % 2 ? SNAKE_COLOR : SNAKE_COLOR_INTENSITY);
     }
-    snake_print_score(self);
+
+    UCHAR row = FIELD_SIZE + 6;
+    UCHAR column = FIELD_SIZE - 2;
+    pixel_number_print(self->score, BG_GREEN, row, column);
 }
 
 void snake_move(Snake * self) {

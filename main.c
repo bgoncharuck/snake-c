@@ -3,7 +3,6 @@
 #include <game_over.h>
 #include <map.h>
 #include <progbase.h>
-#include <progbase/console.h>
 #include <snake.h>
 
 int main(void) {
@@ -42,5 +41,6 @@ int main(void) {
     Console_showCursor();
     Console_unlockInput();
     Console_setCursorPosition(FIELD_SIZE + 5, 1);
+
     return 0;
 }

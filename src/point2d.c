@@ -1,6 +1,4 @@
 #include <point2d.h>
-
-#include <point2d.h>
 #include <progbase/console.h>
 #include <stdlib.h>
 
