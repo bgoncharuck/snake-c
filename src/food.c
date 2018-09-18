@@ -12,6 +12,7 @@ struct __Food {
     double bonus_percent;
 };
 
+// shows bonus lifetime left
 static void print_bonus_line() {
     UCHAR length = FIELD_SIZE + 1;
     UCHAR row = FIELD_SIZE + 4;
@@ -54,12 +55,12 @@ void food_clear(Food * self) {
 // to check bonus availiability
 static void food_update(Food * self) {
     if (!self) return;
-    if (clock() - self->creation_time > BONUS_TIME) {
+    if (clock() - self->creation_time > BONUS_LIFETIME) {
         self->color = BG_WHITE;
         self->bonus = false;
     }
 
-    self->bonus_percent = (clock() - self->creation_time) / (double)BONUS_TIME;
+    self->bonus_percent = (clock() - self->creation_time) / (double)BONUS_LIFETIME;
 }
 
 void food_update_info(Food * self) {

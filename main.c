@@ -19,6 +19,7 @@ int main(void) {
     snake_print_full(snake);
 
     while (snake_process_input(snake) && snake_continue_game(snake, map)) {
+        // to create food only after pressing a key
         if (!game_started && snake_is_moving(snake)) {
             food = food_generate_new(snake, map);
             game_started = true;
@@ -49,5 +50,5 @@ int main(void) {
     Console_unlockInput();
     Console_setCursorPosition(FIELD_SIZE + 5, 1);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -29,6 +29,7 @@ void map_clear(Map * self) {
     }
 }
 
+// adds new cell to map
 static void map_add(Map * self, Point2D * point) {
     if (!self || self->length == self->capacity) return;
 

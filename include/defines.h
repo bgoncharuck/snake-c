@@ -1,4 +1,5 @@
 #pragma once
+
 #include <progbase/console.h>
 
 // to print colors with different shades
@@ -17,6 +18,7 @@ typedef unsigned char UCHAR;
 static const char coordinates_move[][2] = {
     {-1, 0}, {0, -1}, {0, 1}, {1, 0}, {0, 0}};
 
+// +60 to color makes his intensity version
 typedef enum {
     SNAKE_COLOR = BG_GREEN,
     SNAKE_COLOR_INTENSITY = SNAKE_COLOR + 60,
@@ -27,9 +29,15 @@ typedef enum {
 } COLORS;
 
 typedef enum {
+    // size of game field
     FIELD_SIZE = 30,
+
+    // max snake size
     DEFAULT_CAPACITY = 300,
-    BONUS_TIME = 10000,
+
+    BONUS_LIFETIME = 10000,
+
+    // for map reading from file
     WALL_CELL = '1',
     EMPTY_CELL = '0',
     DELAY_TIME = 60

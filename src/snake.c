@@ -11,7 +11,8 @@ struct __Snake {
     size_t length;
     DIRECTION direction;
     size_t score;
-    // where add a new cell
+
+    // where to add a new cell
     Point2D * cell_after_last;
 };
 
@@ -101,8 +102,10 @@ void snake_update_frame(Snake * self) {
 void snake_move(Snake * self) {
     if (!self) return;
 
+    // remember last cell position
     point2d_copy(self->cell_after_last, self->cells[self->length - 1]);
 
+    // move all cells
     for (size_t i = self->length - 1; i > 0; i--) {
         point2d_copy(self->cells[i], self->cells[i - 1]);
     }

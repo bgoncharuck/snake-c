@@ -8,6 +8,7 @@ static const size_t COLUMN_NUMBER = 22;
 static const size_t ROW_ALIGN = 10;
 static const size_t COLUMN_ALIGN = 6;
 
+// lines of game over image
 static const char * image[] = {
     "0212101212121012121212", "2134212341232123243431",
     "1412124213143234131212", "2324313124232424243420",

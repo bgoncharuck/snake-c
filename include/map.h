@@ -10,6 +10,8 @@ void map_clear(Map * self);
 
 Map * map_newFromFile(char * fileName);
 void map_saveToFile(Map * self, char * fileName);
+
 void map_print(Map * self);
 
+// check if map has following point
 bool map_contains(Map * self, Point2D * point);
