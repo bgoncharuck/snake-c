@@ -22,13 +22,20 @@ void pixel_number_print(size_t number, char color, UCHAR row, UCHAR column) {
 
         for (UCHAR i = 0; i < NUMBER_WIDTH; i++) {
             for (UCHAR j = 0; j < NUMBER_HEIGTH; j++) {
-                if (is_colored_cell(numbers[digit][j * NUMBER_WIDTH + i]))
-                    point2d_print_coordinates(
-                        row + j, column - count * (NUMBER_WIDTH + 1) + i,
-                        (i + j) % 2 ? color : color + 60);
+                char color_to_print = BG_DEFAULT;
+                if (is_colored_cell(numbers[digit][j * NUMBER_WIDTH + i])) {
+#ifdef BEAUTY_PRINT
+                    color_to_print = (i + j) % 2 ? color : color + 60;
+#else
+                    color_to_print = color;
+#endif
+                }
+                point2d_print_coordinates(
+                    row + j, column - count * (NUMBER_WIDTH + 1) + i, color_to_print);
             }
         }
 
         count++;
     }
+    fflush(stdout);
 }

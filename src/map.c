@@ -58,7 +58,13 @@ Map * map_newFromFile(char * fileName) {
 static void print_border() {
     Console_clear();
     for (UCHAR i = 1; i <= FIELD_SIZE + 2; i++) {
+
+#ifdef BEAUTY_PRINT
         char color = i % 2 ? BORDER_COLOR_INTENSITY : BORDER_COLOR;
+#else
+        char color = BORDER_COLOR;
+#endif
+
         point2d_print_coordinates(1, i, color);
         point2d_print_coordinates(FIELD_SIZE + 2, i, color);
         point2d_print_coordinates(i, 1, color);
@@ -72,10 +78,16 @@ void map_print(Map * self) {
     print_border();
     for (size_t i = 0; i < self->length; i++) {
         Point2D * curr_point = self->walls[i];
-        point2d_print_field(curr_point,
-                            (curr_point->row + curr_point->column) % 2
-                                ? MAP_COLOR
-                                : MAP_COLOR_INTENSITY);
+
+#ifdef BEAUTY_PRINT
+        char color = (curr_point->row + curr_point->column) % 2
+                         ? MAP_COLOR
+                         : MAP_COLOR_INTENSITY;
+#else
+        char color = MAP_COLOR;
+#endif
+
+        point2d_print_field(curr_point, color);
     }
     Console_setCursorAttribute(BG_DEFAULT);
 }

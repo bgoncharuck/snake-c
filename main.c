@@ -14,14 +14,19 @@ int main(void) {
     Console_hideCursor();
     Console_lockInput();
 
+    // prepare game field
+    map_print(map);
+    snake_print_full(snake);
+
     while (snake_process_input(snake) && snake_continue_game(snake, map)) {
         if (!game_started && snake_is_moving(snake)) {
             food = food_generate_new(snake, map);
             game_started = true;
         }
-        map_print(map);
-        food_print(food);
-        snake_print(snake);
+
+        snake_update_frame(snake);
+        // to update food color and bonus line length
+        food_update_info(food);
 
         if (snake_process_food(snake, food)) {
             food_clear(food);
@@ -29,10 +34,12 @@ int main(void) {
         }
 
         snake_move(snake);
-        sleepMillis(60);
+        sleepMillis(DELAY_TIME);
     }
 
+#ifdef GAME_OVER_PRINT
     game_over_print();
+#endif
 
     map_clear(map);
     snake_clear(snake);

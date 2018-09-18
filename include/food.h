@@ -8,7 +8,7 @@ typedef struct __Food Food;
 
 Food * food_new();
 void food_clear(Food * self);
-void food_print(Food * self);
+void food_update_info(Food * self);
 UCHAR food_get_score(Food * self);
 Point2D * food_get_location(Food * self);
 
