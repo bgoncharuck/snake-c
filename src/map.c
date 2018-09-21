@@ -1,6 +1,5 @@
 #include <defines.h>
 #include <map.h>
-#include <math.h>
 #include <stdlib.h>
 
 struct __Map {

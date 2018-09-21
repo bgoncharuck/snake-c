@@ -1,5 +1,5 @@
 #include <point2d.h>
-#include <progbase/console.h>
+#include <progbase.h>
 #include <stdlib.h>
 
 Point2D * point2d_new(UCHAR row, UCHAR column) {

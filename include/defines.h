@@ -1,6 +1,6 @@
 #pragma once
 
-#include <progbase/console.h>
+#include <progbase.h>
 
 // to print colors with different shades
 #define BEAUTY_PRINT

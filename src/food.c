@@ -60,7 +60,8 @@ static void food_update(Food * self) {
         self->bonus = false;
     }
 
-    self->bonus_percent = (clock() - self->creation_time) / (double)BONUS_LIFETIME;
+    self->bonus_percent =
+        (clock() - self->creation_time) / (double)BONUS_LIFETIME;
 }
 
 void food_update_info(Food * self) {

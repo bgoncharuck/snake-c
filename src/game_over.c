@@ -1,7 +1,6 @@
 #include <game_over.h>
 #include <point2d.h>
 #include <progbase.h>
-#include <progbase/console.h>
 
 static const size_t ROW_NUMBER = 13;
 static const size_t COLUMN_NUMBER = 22;

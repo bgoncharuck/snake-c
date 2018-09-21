@@ -54,3 +54,6 @@ dkms.conf
 #odd folders
 build/*
 .vscode/*
+.idea/*
+.cmake-build-debug/*
+
